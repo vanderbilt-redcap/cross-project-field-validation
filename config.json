@@ -1,7 +1,7 @@
 {
-	"name": "Delete DAGs",
+	"name": "Cross Project Field Validation",
 
-	"namespace": "Vanderbilt\\DeleteDAGsExternalModule",
+	"namespace": "Vanderbilt\\CrossProjectFieldValidationExternalModule",
 
 	"authors": [
 		{
@@ -11,17 +11,65 @@
 		}
 	],
 
-	"permissions": [],
+	"permissions": ["redcap_module_configure_button_display","hook_every_page_top"],
 
-	"description": "Given a group of DAG IDs deletes all records, users and associated DAGs.",
+	"no-auth-pages":["isValidValue"],
 
-	"links": {
-		"project": [
-			{
-				"name": "Delete DAGs",
-				"icon": "report",
-				"url": "delete-dags-config"
-			}
-		]
+	"description": "Given a source and destination project, it validates the data from the given source field.",
+
+	"project-settings": [
+		{
+			"key": "validation",
+			"name": "Validation",
+			"required": true,
+			"type": "sub_settings",
+			"repeatable":true,
+			"sub_settings":[
+				{
+					"key": "project-source",
+					"name": "Source project",
+					"required": true,
+					"type": "project-id"
+				},
+				{
+					"key": "field-source",
+					"name": "Name field of the SOURCE project",
+					"required": true,
+					"type": "text"
+				},
+				{
+					"key": "field-destination",
+					"name": "Name field of the DESTINATION project",
+					"required": true,
+					"type": "text"
+				},
+				{
+					"key": "case-sensitive",
+					"name": "Case-sensitive",
+					"type": "checkbox"
+				},
+				{
+					"key": "prevent-submission",
+					"name": "Prevent Submission",
+					"type": "checkbox"
+				}
+			]
+		}
+
+	],
+	"system-settings": [
+		{
+			"key": "pids",
+			"name": "Project ID (source PID, destination PID) ",
+			"required": true,
+			"type": "text",
+			"repeatable":true
+		}
+	],
+	"compatibility": {
+		"php-version-min": "5.5.0",
+		"php-version-max": "",
+		"redcap-version-min": "8.3.2",
+		"redcap-version-max": ""
 	}
 }
