@@ -149,13 +149,21 @@ class CrossProjectFieldValidationExternalModule extends \ExternalModules\Abstrac
                                         
                                         $('button[name^=\"submit-btn-save\"]').each(function(){
                                              $('[name='+$(this).attr('name')+']')[0].onclick = function(){
-                                                return checkValid();
+                                                 var submit = checkValid();
+                                                 if(submit){
+                                                     dataEntrySubmit($(this).attr('name'));
+                                                 }
+                                                return submit;
                                             };
                                         });
                                         
                                         $('#__SUBMITBUTTONS__-div').find('li').find('a').each(function(){
                                              $('#'+$(this).attr('id')+'')[0].onclick = function(){
-                                                return checkValid();
+                                                 var submit = checkValid();
+                                                 if(submit){
+                                                     dataEntrySubmit($(this).attr('name'));
+                                                 }
+                                                return submit;
                                             };
                                         });  
                                       });</script>";
