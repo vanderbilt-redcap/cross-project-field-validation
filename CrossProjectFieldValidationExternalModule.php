@@ -94,7 +94,7 @@ class CrossProjectFieldValidationExternalModule extends \ExternalModules\Abstrac
                                 $var_name_dest = str_replace('[', '', $field_destination[$index]);
                                 $var_name_dest = str_replace(']', '', $var_name_dest);
 
-                                echo "<script>$(function(){
+                                echo "<script>$(function(){                                            
                                             $('[name=" . $var_name_dest . "]').parent().append('<div name=\"valid_data\" id=\"valid_data_" . $var_name_dest . "\" value=\"\"><i id=\"icon_" . $var_name_dest . "\"></i> <span id=\"valid_" . $var_name_dest . "\"></span></div>');
                                             $('[name=" . $var_name_dest . "]').focusout(function(){
                                                 if($('[name=" . $var_name_dest . "]').val() != ''){
@@ -135,38 +135,53 @@ class CrossProjectFieldValidationExternalModule extends \ExternalModules\Abstrac
                                             });});</script>";
 
                                 if ($prevent_submission[$index]) {
-                                    echo "<script>$(function(){                           
-                                        function checkValid(){
-                                             var prevent = true;
-                                             $('[name=valid_data]').each(function(index){
-                                                if($(this).val() == '0'){
-                                                    alert('Please review your data. Some fields are not correct.');
-                                                    prevent = false;
+                                    echo "<script>
+                                            $(function(){
+                                                //to get all elements dybamically created
+                                                window.onload = function(){
+                                                    $('#formSaveTip').hide();
                                                 }
+                                                function checkValid(){
+                                                     var prevent = true;
+                                                     $('[name=valid_data]').each(function(index){
+                                                        if($(this).val() == '0'){
+                                                            alert('Please review your data. Some fields are not correct.');
+                                                            prevent = false;
+                                                        }
+                                                    });
+                                                     return prevent;
+                                                }
+                                                
+                                                $('button[name^=\"submit-btn-save\"]').each(function(){
+                                                     $('[name='+$(this).attr('name')+']')[0].onclick = function(){
+                                                         console.log('CLICK: '+$(this).attr('name'))
+                                                         var submit = checkValid();
+                                                         if(submit){
+                                                             dataEntrySubmit($(this).attr('name'));
+                                                         }
+                                                        return submit;
+                                                    };
+                                                     $('#'+$(this).attr('name')).click(function(){
+                                                         console.log('CLICK: '+$(this).attr('name'))
+                                                         var submit = checkValid();
+                                                         if(submit){
+                                                             dataEntrySubmit($(this).attr('name'));
+                                                         }
+                                                        return submit;
+                                                    });
+                                                });
+                                                
+                                                $('#__SUBMITBUTTONS__-div').find('li').find('a').each(function(){
+                                                     $('#'+$(this).attr('id')+'')[0].onclick = function(){
+                                                         var submit = checkValid();
+                                                         if(submit){
+                                                             dataEntrySubmit($(this).attr('name'));
+                                                         }
+                                                        return submit;
+                                                    };
+                                                });  
                                             });
-                                             return prevent;
-                                        }
-                                        
-                                        $('button[name^=\"submit-btn-save\"]').each(function(){
-                                             $('[name='+$(this).attr('name')+']')[0].onclick = function(){
-                                                 var submit = checkValid();
-                                                 if(submit){
-                                                     dataEntrySubmit($(this).attr('name'));
-                                                 }
-                                                return submit;
-                                            };
-                                        });
-                                        
-                                        $('#__SUBMITBUTTONS__-div').find('li').find('a').each(function(){
-                                             $('#'+$(this).attr('id')+'')[0].onclick = function(){
-                                                 var submit = checkValid();
-                                                 if(submit){
-                                                     dataEntrySubmit($(this).attr('name'));
-                                                 }
-                                                return submit;
-                                            };
-                                        });  
-                                      });</script>";
+                                      </script>";
                                 }
                             }
                         }
