@@ -135,6 +135,9 @@ class CrossProjectFieldValidationExternalModule extends \ExternalModules\Abstrac
                                                      $('#icon_" . $var_name_dest . "').hide();
                                                  }
                                             });});</script>";
+                                if($prevent_submission[$index]){
+                                    $prevent = true;
+                                }
                             }
                         }
 
@@ -147,13 +150,18 @@ class CrossProjectFieldValidationExternalModule extends \ExternalModules\Abstrac
                                         }
                                         function checkValid(){
                                              var prevent = true;
+                                             var prevent_names = '';
                                              $('[name=valid_data]').each(function(index){
                                                  var name = $(this).attr('id').replace(/valid_data_/g,'');
                                                 if($(this).val() != '0' && $('#'+name).val() != '' && ($(this).attr('prevent') == '1')){
-                                                    alert('Please review your data. Some fields are not correct.');
                                                     prevent = false;
+                                                    prevent_names += name+', ';
                                                 }
                                             });
+                                             if(prevent_names != ''){
+                                                 prevent_names = prevent_names.substring(0, prevent_names.length - 2)
+                                                 alert('Please review your information. The data in '+prevent_names+' is not valid.');
+                                             }
                                              return prevent;
                                         }
                                         
