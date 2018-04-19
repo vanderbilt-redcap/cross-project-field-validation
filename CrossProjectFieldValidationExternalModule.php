@@ -89,13 +89,14 @@ class CrossProjectFieldValidationExternalModule extends \ExternalModules\Abstrac
                     $source_pid = $pid[0];
                     $destination_pid = $pid[1];
                     if($destination_pid == $project_id){
+                        $prevent = false;
                         foreach ($validation as $index=>$validation_content) {
                             if($project_source[$index] == $source_pid) {
                                 $var_name_dest = str_replace('[', '', $field_destination[$index]);
                                 $var_name_dest = str_replace(']', '', $var_name_dest);
 
                                 echo "<script>$(function(){                                            
-                                            $('[name=" . $var_name_dest . "]').parent().append('<div name=\"valid_data\" id=\"valid_data_" . $var_name_dest . "\" value=\"\"><i id=\"icon_" . $var_name_dest . "\"></i> <span id=\"valid_" . $var_name_dest . "\"></span></div>');
+                                            $('[name=" . $var_name_dest . "]').parent().append('<div name=\"valid_data\" id=\"valid_data_" . $var_name_dest . "\" value=\"\" prevent=\"".$prevent_submission[$index]."\"><i id=\"icon_" . $var_name_dest . "\"></i> <span id=\"valid_" . $var_name_dest . "\"></span></div>');
                                             $('[name=" . $var_name_dest . "]').focusout(function(){
                                                 if($('[name=" . $var_name_dest . "]').val() != ''){
                                                    $.ajax({
@@ -114,7 +115,7 @@ class CrossProjectFieldValidationExternalModule extends \ExternalModules\Abstrac
                                                                  $('#valid_" . $var_name_dest . "').attr('style','color: green;font-weight: bold;');
                                                                  $('#icon_" . $var_name_dest . "').attr('style','color: green;font-weight: bold;');
                                                                  $('[name=" . $var_name_dest . "]').attr('style','font-weight: normal; background-color: none;');
-                                                                 $('#valid_data_" . $var_name_dest . "').val('1');
+                                                                 $('#valid_data_" . $var_name_dest . "').val('0');
                                                             }else{
                                                                  $('#valid_" . $var_name_dest . "').text('NOT VALID');
                                                                  $('#icon_" . $var_name_dest . "').attr('class','fas fa-times');
@@ -122,8 +123,9 @@ class CrossProjectFieldValidationExternalModule extends \ExternalModules\Abstrac
                                                                  $('#icon_" . $var_name_dest . "').attr('style','color: red;font-weight: bold;');
                                                                  $('[name=" . $var_name_dest . "]').attr('style','font-weight: bold; background-color: rgb(255, 183, 190);');
                                                                  $('[name=" . $var_name_dest . "]').attr('style','font-weight: bold; background-color: rgb(255, 183, 190);');
-                                                                 $('#valid_data_" . $var_name_dest . "').val('0');
+                                                                 $('#valid_data_" . $var_name_dest . "').val('1');
                                                             }
+                                                            
                                                         }
                                                     });
                                                  }else{
@@ -133,57 +135,50 @@ class CrossProjectFieldValidationExternalModule extends \ExternalModules\Abstrac
                                                      $('#icon_" . $var_name_dest . "').hide();
                                                  }
                                             });});</script>";
-
-                                if ($prevent_submission[$index]) {
-                                    echo "<script>
-                                            $(function(){
-                                                //to get all elements dybamically created
-                                                window.onload = function(){
-                                                    $('#formSaveTip').hide();
-                                                }
-                                                function checkValid(){
-                                                     var prevent = true;
-                                                     $('[name=valid_data]').each(function(index){
-                                                        if($(this).val() == '0'){
-                                                            alert('Please review your data. Some fields are not correct.');
-                                                            prevent = false;
-                                                        }
-                                                    });
-                                                     return prevent;
-                                                }
-                                                
-                                                $('button[name^=\"submit-btn-save\"]').each(function(){
-                                                     $('[name='+$(this).attr('name')+']')[0].onclick = function(){
-                                                         console.log('CLICK: '+$(this).attr('name'))
-                                                         var submit = checkValid();
-                                                         if(submit){
-                                                             dataEntrySubmit($(this).attr('name'));
-                                                         }
-                                                        return submit;
-                                                    };
-                                                     $('#'+$(this).attr('name')).click(function(){
-                                                         console.log('CLICK: '+$(this).attr('name'))
-                                                         var submit = checkValid();
-                                                         if(submit){
-                                                             dataEntrySubmit($(this).attr('name'));
-                                                         }
-                                                        return submit;
-                                                    });
-                                                });
-                                                
-                                                $('#__SUBMITBUTTONS__-div').find('li').find('a').each(function(){
-                                                     $('#'+$(this).attr('id')+'')[0].onclick = function(){
-                                                         var submit = checkValid();
-                                                         if(submit){
-                                                             dataEntrySubmit($(this).attr('name'));
-                                                         }
-                                                        return submit;
-                                                    };
-                                                });  
-                                            });
-                                      </script>";
-                                }
                             }
+                        }
+
+                        if ($prevent) {
+                            echo "<script>
+                                    $(function(){
+                                        //to get all elements dybamically created
+                                        window.onload = function(){
+                                            $('#formSaveTip').hide();
+                                        }
+                                        function checkValid(){
+                                             var prevent = true;
+                                             $('[name=valid_data]').each(function(index){
+                                                 var name = $(this).attr('id').replace(/valid_data_/g,'');
+                                                if($(this).val() != '0' && $('#'+name).val() != '' && ($(this).attr('prevent') == '1')){
+                                                    alert('Please review your data. Some fields are not correct.');
+                                                    prevent = false;
+                                                }
+                                            });
+                                             return prevent;
+                                        }
+                                        
+                                        $('button[name^=\"submit-btn-save\"]').each(function(){
+                                          
+                                             $('[name='+$(this).attr('name')+']')[0].onclick = function(){
+                                                 var submit = checkValid();
+                                                 if(submit){
+                                                     dataEntrySubmit($(this).attr('name'));
+                                                 }
+                                                return submit;
+                                            };
+                                        });
+                                        
+                                        $('#__SUBMITBUTTONS__-div').find('li').find('a').each(function(){
+                                             $('#'+$(this).attr('id')+'')[0].onclick = function(){
+                                                 var submit = checkValid();
+                                                 if(submit){
+                                                     dataEntrySubmit($(this).attr('name'));
+                                                 }
+                                                return submit;
+                                            };
+                                        });  
+                                    });
+                              </script>";
                         }
                     }
                 }
