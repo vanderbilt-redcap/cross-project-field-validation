@@ -15,7 +15,7 @@
 
 	"no-auth-pages":["isValidValue"],
 
-	"description": "Given a source and destination project, it validates the data from the given source field.",
+	"description": "Given a source and destination project, it validates the data from the given source field without the need to show sensitive information.",
 
 	"project-settings": [
 		{
@@ -33,24 +33,24 @@
 				},
 				{
 					"key": "field-source",
-					"name": "Name field of the SOURCE project",
+					"name": "Name field of the SOURCE project<br><i>Format: [variable_name]</i>",
 					"required": true,
 					"type": "text"
 				},
 				{
 					"key": "field-destination",
-					"name": "Name field of the DESTINATION project",
+					"name": "Name field of the DESTINATION project<br><i>Format: [variable_name]</i>",
 					"required": true,
 					"type": "text"
 				},
 				{
 					"key": "case-sensitive",
-					"name": "Case-sensitive",
+					"name": "Case-sensitive?",
 					"type": "checkbox"
 				},
 				{
 					"key": "prevent-submission",
-					"name": "Prevent Submission",
+					"name": "Prevent Submission if the variable is NOT VALID?",
 					"type": "checkbox"
 				}
 			]
