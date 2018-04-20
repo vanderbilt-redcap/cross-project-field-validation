@@ -96,7 +96,7 @@ class CrossProjectFieldValidationExternalModule extends \ExternalModules\Abstrac
                                 $var_name_dest = str_replace(']', '', $var_name_dest);
 
                                 echo "<script>$(function(){                                            
-                                            $('[name=" . $var_name_dest . "]').parent().append('<div name=\"valid_data\" id=\"valid_data_" . $var_name_dest . "\" value=\"\" prevent=\"".$prevent_submission[$index]."\"><i id=\"icon_" . $var_name_dest . "\"></i> <span id=\"valid_" . $var_name_dest . "\"></span></div>');
+                                            $('[name=" . $var_name_dest . "]').parent().append('<div name=\"valid_data\" id=\"valid_data_" . $var_name_dest . "\" valid=\"\" prevent=\"".$prevent_submission[$index]."\"><i id=\"icon_" . $var_name_dest . "\"></i> <span id=\"valid_" . $var_name_dest . "\"></span></div>');
                                             $('[name=" . $var_name_dest . "]').focusout(function(){
                                                 if($('[name=" . $var_name_dest . "]').val() != ''){
                                                    $.ajax({
@@ -115,7 +115,7 @@ class CrossProjectFieldValidationExternalModule extends \ExternalModules\Abstrac
                                                                  $('#valid_" . $var_name_dest . "').attr('style','color: green;font-weight: bold;');
                                                                  $('#icon_" . $var_name_dest . "').attr('style','color: green;font-weight: bold;');
                                                                  $('[name=" . $var_name_dest . "]').attr('style','font-weight: normal; background-color: none;');
-                                                                 $('#valid_data_" . $var_name_dest . "').val('0');
+                                                                 $('#valid_data_" . $var_name_dest . "').attr('valid','0');
                                                             }else{
                                                                  $('#valid_" . $var_name_dest . "').text('NOT VALID');
                                                                  $('#icon_" . $var_name_dest . "').attr('class','fas fa-times');
@@ -123,9 +123,8 @@ class CrossProjectFieldValidationExternalModule extends \ExternalModules\Abstrac
                                                                  $('#icon_" . $var_name_dest . "').attr('style','color: red;font-weight: bold;');
                                                                  $('[name=" . $var_name_dest . "]').attr('style','font-weight: bold; background-color: rgb(255, 183, 190);');
                                                                  $('[name=" . $var_name_dest . "]').attr('style','font-weight: bold; background-color: rgb(255, 183, 190);');
-                                                                 $('#valid_data_" . $var_name_dest . "').val('1');
+                                                                 $('#valid_data_" . $var_name_dest . "').attr('valid','1');
                                                             }
-                                                            
                                                         }
                                                     });
                                                  }else{
@@ -153,8 +152,7 @@ class CrossProjectFieldValidationExternalModule extends \ExternalModules\Abstrac
                                              var prevent_names = '';
                                              $('[name=valid_data]').each(function(index){
                                                  var name = $(this).attr('id').replace(/valid_data_/g,'');
-                                                 console.log(name)
-                                                if($(this).val() != '0' && $('[name='+name+']').val() != '' && ($(this).attr('prevent') == '1')){
+                                                if($(this).attr('valid') == '1' && $('[name='+name+']').val() != '' && ($(this).attr('prevent') == '1')){
                                                     prevent = false;
                                                     prevent_names += name+', ';
                                                 }
