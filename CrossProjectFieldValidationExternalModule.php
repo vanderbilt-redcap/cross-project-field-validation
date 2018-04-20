@@ -153,7 +153,8 @@ class CrossProjectFieldValidationExternalModule extends \ExternalModules\Abstrac
                                              var prevent_names = '';
                                              $('[name=valid_data]').each(function(index){
                                                  var name = $(this).attr('id').replace(/valid_data_/g,'');
-                                                if($(this).val() != '0' && $('#'+name).val() != '' && ($(this).attr('prevent') == '1')){
+                                                 console.log(name)
+                                                if($(this).val() != '0' && $('[name='+name+']').val() != '' && ($(this).attr('prevent') == '1')){
                                                     prevent = false;
                                                     prevent_names += name+', ';
                                                 }
