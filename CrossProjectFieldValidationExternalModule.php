@@ -55,7 +55,8 @@ class CrossProjectFieldValidationExternalModule extends \ExternalModules\Abstrac
      * @param $project_id
      * @return null
      */
-    function redcap_module_configure_button_display($project_id) {
+    function redcap_module_configure_button_display() {
+        $project_id = func_get_args()[0];
         if($project_id != ""){
             $pids = empty($this->getProjectSetting('pids'))?array():$this->getProjectSetting('pids');
             if($pids != ""){
